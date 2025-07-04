@@ -1,43 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-rose-100">
-    <div class="m-6">
-      <header class="flex justify-between bg-purple-100 shadow-md rounded-md">
-        <p class="text-red-800 border-md-4 font-extrabold m-3">EVM</p>
-        <div class="flex justify-between">
-          <div class="m-3">
-            <button
-              class="bg-gray-400 mr-3 text-white rounded-md p-1 hover:text-red-800"
-            >
-              Home
-            </button>
-            <button
-              class="bg-gray-400 mr-3 text-white rounded-md p-1 hover:text-red-800"
-            >
-              Events
-            </button>
-            <button
-              class="bg-gray-400 text-white rounded-md p-1 hover:text-red-800"
-            >
-              About us
-            </button>
-          </div>
-          <div>
-            <p class="m-2 rounded-full bg-purple-500 font-extrabold px-2 py-2">
-              pfl
-            </p>
-          </div>
-        </div>
-      </header>
-      <main>
-        <!-- Organizer Dashboard -->
-        <p class="font-extrabold text-2xl mt-8 ml-2">Organizer Dashboard</p>
+{% extends "dashboard/main_dashboard.html" %}
+{% block title %}Organizer Dashboard{% endblock title %}
+{% block events %}
+              <!-- organizer Dashboard -->
+
+        <p class="font-extrabold text-2xl mt-8 ml-2"></p>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-white">
           <div
             class="bg-blue-500 p-6 rounded-2xl text-lg font-bold hover:text-black-500"
@@ -74,24 +40,23 @@
           </div>
           <!-- grid short details  -->
           <div class="grid grid-cols-3">
-            <p class="font-bold px-4 py-2">Hackathon</p>
-            <p class="font-bold px-1 py-2">00/00/0000</p>
-            <p class="font-bold py-2">somewhere</p>
+            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
+            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
+            <p class="font-bold text-green-500 py-2">somewhere</p>
              <hr><hr><hr>
           </div>
           <!-- 2  -->
           <div class="grid grid-cols-3">
-            <p class="font-bold px-4 py-2">Hackathon</p>
-            <p class="font-bold px-1 py-2">00/00/0000</p>
-            <p class="font-bold py-2">somewhere</p>
+            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
+            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
+            <p class="font-bold text-green-500 py-2">somewhere</p>
              <hr><hr><hr>
           </div>
           <!-- 3 -->
           <div class="grid grid-cols-3">
-            <p class="font-bold px-4 py-2">Hackathon</p>
-            <p class="font-bold px-1 py-2">00/00/0000</p>
-            <p class="font-bold py-2">somewhere</p>
-          </div>
+            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
+            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
+            <p class="font-bold text-green-500 py-2">somewhere</p>
         </div>
         <!-- all events  -->
         <p class="px-4 py-8 font-extrabold text-2xl">All Events</p>
@@ -107,7 +72,6 @@
             <p>Participants : 35</p>
           </div>
         </div>
-                    <!-- edit/update block  -->
 
         <section class="bg-purple-100 py-5 mt-10 rounded-xl px-5">
             <p class="text-2xl font-extrabold py-2 mb-3">Add/Update Event</p>
@@ -119,7 +83,5 @@
                 <button class="px-2 py-1 rounded-md bg-pink-600">Submit</button>
             </form>
         </section>
-      </main>
-    </div>
-  </body>
-</html>
+
+{% endblock events %}
