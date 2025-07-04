@@ -16,3 +16,6 @@ def upcoming_events(request):
 
 def past_events(request):
     return render(request, 'user_past_events.html')
+
+def test(request):
+    return render(request, 'test.html')
