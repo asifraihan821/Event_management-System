@@ -2,11 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 # Create your views here.
-def home(request):
-    return HttpResponse('welcome to home')
+def main_dashboard(request):
+    return render(request, 'org_dashboard.html')
 
-def contact(request):
-    return HttpResponse('<h1>welcome to contact</h2>')
+def total_participants(request):
+    return render(request, 'total_participants.html')
 
-def show_task(request):
-    return HttpResponse('<h1>welcome to our showtask page</h2>')
+def upcoming_events(request):
+    return render(request, 'upcoming_events.html')
+
+def past_events(request):
+    return render(request, 'user_past_events.html')
