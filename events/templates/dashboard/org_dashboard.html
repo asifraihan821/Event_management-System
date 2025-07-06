@@ -4,84 +4,103 @@
               <!-- organizer Dashboard -->
 
         <p class="font-extrabold text-2xl mt-8 ml-2"></p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-white">
-          <div
-            class="bg-blue-500 p-6 rounded-2xl text-lg font-bold hover:text-black-500"
-          >
-            <!-- card 1 -->
-            <p>Total Events</p>
-            <p>12</p>
-          </div>
-          <div class="bg-purple-500 p-6 rounded-2xl text-lg font-bold">
-            <!-- card 2-->
-            <p>Upcoming Events</p>
-            <p>12</p>
-          </div>
-          <div class="bg-gray-500 p-6 rounded-2xl text-lg font-bold">
-            <!-- card 3-->
-            <p>Past Events</p>
-            <p>12</p>
-          </div>
-          <div class="bg-rose-800 p-6 rounded-2xl text-lg font-bold">
-            <!-- card 4-->
-            <p>Total Participants</p>
-            <p>12</p>
-          </div>
-        </div>
-        <!-- possible events  -->
-        <div class="bg-purple-200 rounded-2xl shadow-md">
-          <p class="mt-10 font-extrabold text-xl py-5 px-4">Today's Events</p>
-          <div class="grid grid-cols-3 px-4">
-            <!-- grid stats  -->
-            <div class="font-extrabold text-red-600">Events</div>
-            <div class="font-extrabold text-red-600">Time</div>
-            <div class="px-1 font-extrabold text-red-600">Location</div>
-            <hr><hr><hr>
-          </div>
-          <!-- grid short details  -->
-          <div class="grid grid-cols-3">
-            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
-            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
-            <p class="font-bold text-green-500 py-2">somewhere</p>
-             <hr><hr><hr>
-          </div>
-          <!-- 2  -->
-          <div class="grid grid-cols-3">
-            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
-            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
-            <p class="font-bold text-green-500 py-2">somewhere</p>
-             <hr><hr><hr>
-          </div>
-          <!-- 3 -->
-          <div class="grid grid-cols-3">
-            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
-            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
-            <p class="font-bold text-green-500 py-2">somewhere</p>
-        </div>
-        <!-- all events  -->
-        <p class="px-4 py-8 font-extrabold text-2xl">All Events</p>
-        <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="border border-md-4 p-4 leading-8 bg-purple-100 shadow-md rounded-md">
-            <p class="text-xl">Web Dev Contest</p>
-            <p class="font-bold">catagory:Development</p>
-            <p>Participants : 35</p>
-          </div>
-          <div class="border border-md-4 p-4 leading-8 bg-purple-100 shadow-md rounded-md">
-            <p class="text-xl">Web Dev Contest</p>
-            <p class="font-bold">catagory:Development</p>
-            <p>Participants : 35</p>
-          </div>
-        </div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-white">
+      {% comment %} card 1  {% endcomment %}
+       <a href="{% url "total-events" %}?type=totalEvents">
+  <div class="bg-blue-500 p-6 rounded-2xl text-lg font-bold hover:text-black-500">
+    <p>Total Events</p>
+    {% if events %}
+    <p>{{events}}</p>
+    {% endif %}
+  </div>
+  </a>
+      {% comment %} card 2  {% endcomment %}
+       <a href="{% url "upcoming-events" %}?type=upcoming">
+  <div class="bg-purple-500 p-6 rounded-2xl text-lg font-bold">
+    <p>Upcoming Events</p>
+    <p>{{upcoming_events}}</p>
+  </div>
+  </a>
+        {% comment %} card 3  {% endcomment %}
+    <a href="{% url "past-events" %}?type=past">
+  <div class="bg-gray-500 p-6 rounded-2xl text-lg font-bold">
+    <p>Past Events</p>
+    <p>{{past_events}}</p>
+  </div>
+  </a>
+        {% comment %} card 4  {% endcomment %}
+  <a href="{% url "participants" %}?type=participants">
+  <div class="bg-rose-800 p-6 rounded-2xl text-lg font-bold">
+    <p>Participants</p>
+    <p>{{total_participants}}</p>
+  </div>
+  </a>
+
+
+</div>
+<!-- possible events  -->
+<div class="bg-purple-200 rounded-2xl shadow-md mb-10">
+  <p class="mt-10 font-extrabold text-xl py-5 px-4">Today's Events</p>
+  <div class="grid grid-cols-3 px-4">
+    <!-- grid stats  -->
+    <div class="font-extrabold text-red-600">Events</div>
+    <div class="font-extrabold text-red-600">Date</div>
+    <div class="px-1 font-extrabold text-red-600">Location</div>
+    <hr />
+    <hr />
+    <hr />
+  </div>
+  <!-- grid short details  -->
+  {% if todays_events %} {% for todays_event in todays_events %}
+  <div class="grid grid-cols-3">
+    <p class="font-bold text-green-500 px-4 py-2">{{todays_event.name}}</p>
+    <p class="font-bold text-green-500 px-1 py-2">{{todays_event.date}}</p>
+    <p class="font-bold text-green-500 py-2">{{todays_event.location}}</p>
+    <hr /><hr /><hr />
+  </div>
+  {% endfor %} 
+  {% else %}
+  <p class="text-black-400 p-5 text-center font-extrabold">
+    No Event for Today
+  </p>
+  {% endif %}
+  <!-- all events  -->
+  <p class="px-4 py-8 font-extrabold text-2xl shadow-2xl">All Events</p>
+  {% for event in all_events %}
+  <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-2 p-4">
+    <div class="border border-md-4 p-4 leading-8 bg-purple-100 shadow-md rounded-md flex justify-between">
+      <p class="text-xl">{{event.name}}</p>
+      <p class="font-bold">catagory: {{event.category}}</p>
+      <p>Number of Participants : {{event.partcpnts}}</p>
+      <div class="mt-2 space-x-2">
+      <a href="{% url 'update_event' event.id %}" class="bg-blue-500 text-white px-3 py-1 rounded">Update</a>
+      <a href="{% url 'delete_event' event.id %}" class="bg-red-500 text-red font-extrabold px-3 py-1 rounded" onclick="return confirm('Are you sure you want to delete this event?')">Delete</a>
+    </div>
+    </div>
+  </div>
+  {% endfor %} 
+</div>
 
         <section class="bg-purple-100 py-5 mt-10 rounded-xl px-5">
-            <p class="text-2xl font-extrabold py-2 mb-3">Add/Update Event</p>
-            <form class="max-w-xl space-y-4 border border-gray-100 p-4 rounded-md shadow-2xl">
-                <input class="w-full border border-yellow-500 rounded-md px-5 py-2" placeholder="Event Name" type="text">
-                <input class="w-full border border-yellow-500 rounded-md px-5 py-2" placeholder="Catagory" type="text">
-                <input class="w-full border border-yellow-500 rounded-md px-5 py-2" placeholder="Participants" type="text">
-                <input class="w-full border border-yellow-500 rounded-md px-5 py-2" placeholder="dd/mm/yyyy" type="date">
-                <button class="px-2 py-1 rounded-md bg-pink-600">Submit</button>
-            </form>
-        </section>
+         <div>
+          {% if messages %}
+            {% for message in messages %}
+            <div class="px-2 py-2 {% if message.tags == 'success' %}bg-green-500 {% endif %}">{{message}}</div>
+            {% endfor %}
+          {% endif %}
+         </div>
+    <p class="text-2xl font-extrabold py-2 mb-3">Add/Update Event</p>
+    <form method="POST" action="{% url 'create_event' %}" class="max-w-xl space-y-4 border border-gray-100 p-4 rounded-md shadow-2xl">
+        {% csrf_token %}
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="name" placeholder="Event Name" type="text">
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="category" placeholder="Category" type="text">
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="location" placeholder="Location" type="text">
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="date" placeholder="dd/mm/yyyy" type="date">
+        <textarea class="w-full border border-yellow-500 rounded-md px-5 py-2" name="description" placeholder="Description"></textarea>
+        <textarea class="w-full border border-yellow-500 rounded-md px-5 py-2" name="category_description" placeholder="Category Description"></textarea>
+        <button type="submit" class="px-2 py-1 rounded-md bg-pink-600">Create</button>
+    </form>
+</section>
+
 
 {% endblock events %}

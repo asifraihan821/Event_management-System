@@ -1,77 +1,80 @@
-{% extends "dashboard/main_dashboard.html" %}
- {% block title %} User Dashboard{% endblock title %}
+{% extends "dashboard/main_dashboard.html" %} 
+{% block title %} User Dashboard{%endblock title %} 
 {% block events %}
 
 <!-- user Dashboard -->
-        <p class="font-extrabold text-2xl mt-8 ml-2"></p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-white">
-          <div
-            class="bg-blue-500 p-6 rounded-2xl text-lg font-bold hover:text-black-500"
-          >
-            <!-- card 1 -->
-            <p>Total Events</p>
-            <p>12</p>
-          </div>
-          <div class="bg-purple-500 p-6 rounded-2xl text-lg font-bold">
-            <!-- card 2-->
-            <p>Upcoming Events</p>
-            <p>12</p>
-          </div>
-          <div class="bg-gray-500 p-6 rounded-2xl text-lg font-bold">
-            <!-- card 3-->
-            <p>Past Events</p>
-            <p>12</p>
-          </div>
-          <div class="bg-rose-800 p-6 rounded-2xl text-lg font-bold">
-            <!-- card 4-->
-            <p>Total Participants</p>
-            <p>12</p>
-          </div>
-        </div>
-        <!-- possible events  -->
-        <div class="bg-purple-200 rounded-2xl shadow-md">
-          <p class="mt-10 font-extrabold text-xl py-5 px-4">Today's Events</p>
-          <div class="grid grid-cols-3 px-4">
-            <!-- grid stats  -->
-            <div class="font-extrabold text-red-600">Events</div>
-            <div class="font-extrabold text-red-600">Time</div>
-            <div class="px-1 font-extrabold text-red-600">Location</div>
-            <hr><hr><hr>
-          </div>
-          <!-- grid short details  -->
-          <div class="grid grid-cols-3">
-            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
-            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
-            <p class="font-bold text-green-500 py-2">somewhere</p>
-             <hr><hr><hr>
-          </div>
-          <!-- 2  -->
-          <div class="grid grid-cols-3">
-            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
-            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
-            <p class="font-bold text-green-500 py-2">somewhere</p>
-             <hr><hr><hr>
-          </div>
-          <!-- 3 -->
-          <div class="grid grid-cols-3">
-            <p class="font-bold text-green-500 px-4 py-2">Hackathon</p>
-            <p class="font-bold text-green-500 px-1 py-2">00/00/0000</p>
-            <p class="font-bold text-green-500 py-2">somewhere</p>
-        </div>
-        <!-- all events  -->
-        <p class="px-4 py-8 font-extrabold text-2xl">All Events</p>
-        <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="border border-md-4 p-4 leading-8 bg-purple-100 shadow-md rounded-md">
-            <p class="text-xl">Web Dev Contest</p>
-            <p class="font-bold">catagory:Development</p>
-            <p>Participants : 35</p>
-          </div>
-          <div class="border border-md-4 p-4 leading-8 bg-purple-100 shadow-md rounded-md">
-            <p class="text-xl">Web Dev Contest</p>
-            <p class="font-bold">catagory:Development</p>
-            <p>Participants : 35</p>
-          </div>
-        </div>
-
+<p class="font-extrabold text-2xl mt-8 ml-2"></p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-white">
+            {% comment %} card 1  {% endcomment %}
+             <a href="{% url "total-events" %}?type=totalEvents">
+  <div class="bg-blue-500 p-6 rounded-2xl text-lg font-bold hover:text-black-500">
+    <p>Total Events</p>
+    {% if events %}
+    <p>{{events}}</p>
+    {% endif %}
+  </div>
+  </a>
+      {% comment %} card 2  {% endcomment %}
+       <a href="{% url "upcoming-events" %}?type=upcoming">
+  <div class="bg-purple-500 p-6 rounded-2xl text-lg font-bold">
+    <p>Upcoming Events</p>
+    <p>{{upcoming_events}}</p>
+  </div>
+  </a>
+        {% comment %} card 3  {% endcomment %}
+         <a href="{% url "past-events" %}?type=past">
+  <div class="bg-gray-500 p-6 rounded-2xl text-lg font-bold">
+    <p>Past Events</p>
+    <p>{{past_events}}</p>
+  </div>
+  </a>
+        {% comment %} card 4  {% endcomment %}
+         <a href="{% url "participants" %}?type=participants">
+  <div class="bg-rose-800 p-6 rounded-2xl text-lg font-bold">
+    <p> Participants</p>
+    <p>{{total_participants}}</p>
+  </div>
+  </a>
+</div>
+<!-- possible events  -->
+<div class="bg-purple-200 rounded-2xl shadow-md mb-10">
+  <p class="mt-10 font-extrabold text-xl py-5 px-4">Today's Events</p>
+  <div class="grid grid-cols-3 px-4">
+    <!-- grid stats  -->
+    <div class="font-extrabold text-red-600">Events</div>
+    <div class="font-extrabold text-red-600">Date</div>
+    <div class="px-1 font-extrabold text-red-600">Location</div>
+    <hr />
+    <hr />
+    <hr />
+  </div>
+  <!-- grid short details  -->
+  {% if todays_events %} 
+    {% for todays_event in todays_events %}
+  <div class="grid grid-cols-3">
+    <p class="font-bold text-green-500 px-4 py-2">{{todays_event.name}}</p>
+    <p class="font-bold text-green-500 px-1 py-2">{{todays_event.date}}</p>
+    <p class="font-bold text-green-500 py-2">t{{odays_event.location}}</p>
+    <hr /><hr /><hr />
+  </div>
+    {% endfor %} 
+  {% else %}
+  <p class="text-black-400 p-5 text-center font-extrabold">
+    No Event for Today
+  </p>
+  {% endif %}
+  <!-- all events  -->
+  <p class="px-4 py-8 font-extrabold text-2xl shadow-2xl">All Events</p>
+  {% for event in all_events %}
+  <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-2 p-4">
+    <div class="border border-md-4 p-4 leading-8 bg-purple-100 shadow-md rounded-md"
+    >
+      <p class="text-xl">{{event.name}}</p>
+      <p class="font-bold">catagory: {{event.category}}</p>
+      <p>Number of Participants : {{event.partcpnts}}</p>
+    </div>
+  </div>
+  {% endfor %} 
+</div>
 
 {% endblock events %}

@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>update_event</title>
+    <link rel="stylesheet" href="{% static "css/output.css" %}">
+</head>
+<body class="bg-gray-100 p-10">
+    <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-bold mb-4 text-center">Update Event</h2>
+        <form method="POST" action="{% url 'update_event' event.id %}">
+
+            {% csrf_token %}
+            
+            <input name="name" value="{{ event.name }}" class="w-full border rounded px-3 py-2" type="text" placeholder="Name">
+            <input name="category" value="{{ event.category.name }}" class="w-full border rounded px-3 py-2 mt-2" type="text" placeholder="Category">
+            <input name="location" value="{{ event.location }}" class="w-full border rounded px-3 py-2 mt-2" type="text" placeholder="Location">
+            <input name="date" value="{{ event.date|date:'Y-m-d' }}" class="w-full border rounded px-3 py-2 mt-2" type="date">
+            <textarea name="description" class="w-full border rounded px-3 py-2 mt-2" placeholder="Description">{{ event.description }}</textarea>
+            <textarea name="category_description" class="w-full border rounded px-3 py-2 mt-2" placeholder="Category Description">{{ event.category.description }}</textarea>
+            <button class="bg-red-500 text-black font-extrabold px-4 py-2 mt-5 rounded" type="submit">Update</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -17,16 +17,15 @@
     <p>Number of participants</p>
   </div>
   <hr>
-  <div class="flex justify-between ">
-    <p>Event name</p>
-    <p>00</p>
-  </div>
-  <hr>
-  <div class="flex justify-between ">
-    <p>Event name</p>
-    <p>00</p>
-  </div>
-  <hr>
+  {% for participant in participants %}
+    <div class="flex justify-between ">
+      <p>{{participant.name}}</p>
+      <p>{{participant.partcpnts}}</p>
+    </div>
+    <hr>
+    {% empty %} 
+     <p>No one has participated yet</p>
+  {% endfor %}
   </div>
 </div>
 
