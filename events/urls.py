@@ -1,8 +1,9 @@
 from django.urls import path
-from events.views import org_dashboard,total_participants, upcoming_events,past_events,user_dashboard,create_event, total_event,update_event,delete_event
+from events.views import org_dashboard,total_participants, upcoming_events,past_events,user_dashboard,create_event, total_event,update_event,delete_event,event_list
 
 urlpatterns = [
     path('org-dashboard/', org_dashboard , name='org-dashboard'),
+     path('event-list/', event_list, name='event_list'),
     path('total-participants/', total_participants, name='participants'),
     path('upcoming-events/', upcoming_events, name='upcoming-events'),
     path('past-events/',past_events , name='past-events'),

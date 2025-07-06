@@ -141,3 +141,6 @@ def total_event(request):
     events = Event.objects.prefetch_related('participants').annotate(partcpnts = Count('participants'))
     return render(request, 'user_AllEvents.html', {'events':events})
      
+
+def event_list(request):
+    return render(request, 'events/event_list.html')
