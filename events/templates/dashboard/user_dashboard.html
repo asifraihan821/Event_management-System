@@ -17,7 +17,7 @@
       {% comment %} card 2  {% endcomment %}
        <a href="{% url "upcoming-events" %}?type=upcoming">
   <div class="bg-purple-500 p-6 rounded-2xl text-lg font-bold">
-    <p>Upcoming Events</p>
+    <p>Upcoming Event</p>
     <p>{{upcoming_events}}</p>
   </div>
   </a>
@@ -66,7 +66,7 @@
   <!-- all events  -->
   <p class="px-4 py-8 font-extrabold text-2xl shadow-2xl">All Events</p>
   {% for event in all_events %}
-  <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-2 p-4">
+  <div class="grid md:grid-cols-2 lg:grid-cols-1 w-full gap-2 p-4">
     <div class="border border-md-4 p-4 leading-8 bg-purple-100 shadow-md rounded-md"
     >
       <p class="text-xl">{{event.name}}</p>
