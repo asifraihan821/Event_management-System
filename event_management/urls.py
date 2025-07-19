@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.urls import path,include
 from django.http import HttpResponse
 from debug_toolbar.toolbar import debug_toolbar_urls
-def home(request):
-    return HttpResponse("Home Page Working")
+from core.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home), 
+    path('', home,name='home'), 
     path('events/',include('events.urls')),
+    path('users/',include('users.urls')),
 ] + debug_toolbar_urls()
