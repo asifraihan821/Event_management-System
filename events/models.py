@@ -9,15 +9,20 @@ from django.db import models
 ○ Fields: name and description.'''
 
 
+from django.contrib.auth.models import User
+
 class Event(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateField()
-    location = models.CharField()
+    location = models.CharField(max_length=255)
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
+
+    attendees = models.ManyToManyField(User, related_name="rsvped_events", blank=True)
 
     def __str__(self):
         return self.name
+
 
 
 class Participants(models.Model):

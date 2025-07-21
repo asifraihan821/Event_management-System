@@ -5,6 +5,7 @@ from django.db.models import Q, Min, Max, Count
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required,user_passes_test,login_required
 from users.views import is_admin
+from django.core.mail import send_mail
 
 # Create your views here.
 def is_organizer(user):
@@ -176,3 +177,38 @@ def total_event(request):
 @user_passes_test(has_required_role,login_url='no-permission')
 def event_list(request):
     return render(request, 'events/event_list.html')
+
+
+
+@login_required
+def rsvp_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    user = request.user
+
+    if user in event.attendees.all():
+        messages.warning(request, "You have already RSVPed to this event.")
+    else:
+        event.attendees.add(user)
+
+        # Confirmation email
+        send_mail(
+            'RSVP Confirmation',
+            f'Thank you {user.username} for RSVPing to "{event.name}".',
+            'noreply@yourdomain.com',
+            [user.email],
+            fail_silently=False,
+        )
+        messages.success(request, f"You successfully RSVPed to '{event.name}'.")
+
+    return redirect('event-detail', event_id=event.id)
+
+
+@login_required
+def participant_dashboard(request):
+    events = request.user.rsvped_events.all()
+    return render(request, 'dashboard/participant_dashboard.html', {'events': events})
+
+
+def event_detail(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    return render(request, 'events/event_detail.html', {'event': event})
