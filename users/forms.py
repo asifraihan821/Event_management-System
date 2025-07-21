@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group,Permission
 from django import forms
 import re
 
@@ -55,3 +55,23 @@ class CustomRegistrationForm(forms.ModelForm):
             raise forms.ValidationError('this email is already existing')
         
         return email
+
+
+class AssignedRoleForm(forms.Form):
+    role = forms.ModelChoiceField(
+        queryset=Group.objects.all(),
+        empty_label= 'Select a Role'
+    )
+
+
+class CreateGroupForm(forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),
+        widget= forms.CheckboxSelectMultiple,
+        required=False,
+        label='assign Permission'
+    )
+
+    class Meta:
+        model = Group
+        fields = ['name', 'permissions']

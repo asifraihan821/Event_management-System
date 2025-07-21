@@ -13,6 +13,7 @@
     <div class="p-9 flex justify-center">
         
         <form method="POST" class="space-y-4 bg-rose-300 p-6 rounded shadow-md w-100">
+            {% csrf_token %}
             {% if messages %}
                 {% for message in messages %}
                     <div class="bg-green-400 rounded-sm shadow-md font-bold px-2 py-1">{{message}}</div>
@@ -23,7 +24,7 @@
                     <div class="bg-red-600 px-2 py-1 text-white font-bold">{{ error }}</div>
                 {% endfor %}
             {% endif %}
-            {% csrf_token %}
+            
             {% for field in form %}
                 <p>
                     <label for="{{ field.id_for_label }}">{{field.label}}</label>

@@ -3,8 +3,22 @@ from events.models import Category,Event,Participants
 from datetime import date
 from django.db.models import Q, Min, Max, Count
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required,user_passes_test,login_required
+from users.views import is_admin
 
 # Create your views here.
+def is_organizer(user):
+    return user.groups.filter(name='organizer').exists()
+
+def is_participants(user):
+    return user.groups.filter(name='participants').exists()
+
+def has_required_role(user):
+    return is_participants(user) or is_organizer(user) or is_admin(user)
+
+
+@login_required
+@user_passes_test(is_organizer,login_url='no-permission')
 def org_dashboard(request):
     type = request.GET.get('type', 'all')
     today = date.today()
@@ -40,6 +54,8 @@ def org_dashboard(request):
     })
 
 
+
+@login_required
 def user_dashboard(request):
     today = date.today()
     events = Event.objects.select_related().count()
@@ -51,20 +67,29 @@ def user_dashboard(request):
 
     return render(request, 'dashboard/user_dashboard.html',{'events':events, 'todays_events':todays_events, 'upcoming_events':upcoming_events, 'past_events':past_events, 'total_participants':total_participants,'all_events':all_events})
 
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def total_participants(request):
     participants = Event.objects.annotate(partcpnts = Count('participants'))
     return render(request, 'total_participants.html', {'participants':participants})
 
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def upcoming_events(request):
     today = date.today()
     events = Event.objects.prefetch_related('participants').annotate(partcpnts = Count('participants')).filter(date__gt = today)    
     return render(request, 'upcoming_events.html',{'events':events})
 
+
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def past_events(request):
     today = date.today()
     events = Event.objects.prefetch_related('participants').annotate(partcpnts = Count('participants')).filter(date__lt = today)    
     return render(request, 'user_past_events.html', {'events':events})
 
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def create_event(request):
 
     if request.method == 'POST':
@@ -97,6 +122,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from events.models import Event, Category
 from django.contrib import messages
 
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def update_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     
@@ -130,17 +157,22 @@ def update_event(request, event_id):
     
     return render(request, 'update_event.html', {'event': event})
 
-
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     event.delete()
     messages.success(request, "Event deleted successfully")
     return redirect('org-dashboard')
 
+
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def total_event(request):
     events = Event.objects.prefetch_related('participants').annotate(partcpnts = Count('participants'))
     return render(request, 'user_AllEvents.html', {'events':events})
      
-
+@login_required
+@user_passes_test(has_required_role,login_url='no-permission')
 def event_list(request):
     return render(request, 'events/event_list.html')
