@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+    <p class="text-center text-lime-400 mt-6 font-extrabold text-4xl">Welcome to authentication System...</p>
+    <div class="py-20 px-7">
+        <div class="p-9 flex justify-center">
+        
+        <form method="POST" class="space-y-4 bg-rose-300 p-6 rounded shadow-md w-100">
+            {% csrf_token %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="bg-green-400 rounded-sm shadow-md font-bold px-2 py-1">{{message}}</div>
+                {% endfor %}
+            {% endif %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="bg-red-600 px-2 py-1 text-white font-bold">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+            
+            {% for field in form %}
+                <p>
+                    <label for="{{ field.id_for_label }}">{{field.label}}</label>
+                    {{field}}
+
+                    {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                                <li> {{error}} </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </p>
+            {% endfor %}
+            <button class="bg-blue-700 text-white px-2 py-1 rounded-sm hover:bg-yellow-400" type="submit">SignUp</button>
+        </form>
+    </div>
+    </div>
+
+    {% endblock content %}

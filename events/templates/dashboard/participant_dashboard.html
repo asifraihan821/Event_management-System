@@ -1,0 +1,14 @@
+<h2>My RSVPed Events</h2>
+
+{% if events %}
+    <ul>
+        {% for event in events %}
+            <li>
+                <strong>{{ event.name }}</strong> — {{ event.date }} at {{ event.location }}
+                (<a href="{% url 'event-detail' event.id %}">View</a>)
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You haven't RSVPed to any events yet.</p>
+{% endif %}

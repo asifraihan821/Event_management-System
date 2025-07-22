@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save,pre_save
+from django.dispatch import receiver
 
 # Create your models here.
 '''● Event:
@@ -9,15 +11,20 @@ from django.db import models
 ○ Fields: name and description.'''
 
 
+from django.contrib.auth.models import User
+
 class Event(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     date = models.DateField()
-    location = models.CharField()
+    location = models.CharField(max_length=255)
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
+
+    attendees = models.ManyToManyField(User, related_name="rsvped_events", blank=True)
 
     def __str__(self):
         return self.name
+
 
 
 class Participants(models.Model):
@@ -34,3 +41,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+# @receiver(post_save,sender=Event )
+# def notify_event_creation(sender,instance,created,**kwargs):
+#     if created:
