@@ -5,11 +5,18 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from users.forms import RegisterForm,CustomRegistrationForm,AssignedRoleForm,CreateGroupForm
 from django.contrib.auth.decorators import permission_required,user_passes_test,login_required
+from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
 def is_admin(user):
     return user.groups.filter(name='Admin').exists()
 
+
+def is_organizer(user):
+    return user.groups.filter(name='organizer').exists()
+
+def is_participant(user):
+    return user.groups.filter(name='participant').exists()
 
 def sign_up(request):
     if request.method =='GET':
@@ -88,3 +95,43 @@ def create_group(request):
             return redirect('create-group')
         
     return render(request, 'admin/create_group.html', {'form':form})
+
+
+@login_required
+@user_passes_test(is_admin)
+def admin_dashboard(request):
+    return render(request, 'admin/dashboard.html')
+
+@login_required
+@user_passes_test(is_organizer)
+def organizer_dashboard(request):
+    return render(request, 'organizer/dashboard.html')
+
+@login_required
+@user_passes_test(is_participant)
+def participant_dashboard(request):
+    events = request.user.event_set.all()  # if RSVP relation is set up
+    return render(request, 'participant/dashboard.html', {'events': events})
+
+
+
+def custom_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            
+            # Redirect based on role
+            if is_admin(user):
+                return redirect('admin-dashboard')
+            elif is_organizer(user):
+                return redirect('organizer-dashboard')
+            elif is_participant(user):
+                return redirect('participant-dashboard')
+            else:
+                return redirect('home') 
+        
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})

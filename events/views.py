@@ -19,7 +19,7 @@ def has_required_role(user):
 
 
 @login_required
-@user_passes_test(is_organizer,login_url='no-permission')
+@user_passes_test(has_required_role,login_url='no-permission')
 def org_dashboard(request):
     type = request.GET.get('type', 'all')
     today = date.today()
@@ -185,20 +185,9 @@ def rsvp_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     user = request.user
 
-    if user in event.attendees.all():
-        messages.warning(request, "You have already RSVPed to this event.")
-    else:
+    if user not in event.attendees.all():
         event.attendees.add(user)
-
-        # Confirmation email
-        send_mail(
-            'RSVP Confirmation',
-            f'Thank you {user.username} for RSVPing to "{event.name}".',
-            'noreply@yourdomain.com',
-            [user.email],
-            fail_silently=False,
-        )
-        messages.success(request, f"You successfully RSVPed to '{event.name}'.")
+        messages.success(request, "RSVP successful. Confirmation email sent.")
 
     return redirect('event-detail', event_id=event.id)
 

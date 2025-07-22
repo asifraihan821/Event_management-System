@@ -1,16 +1,10 @@
-{% load static %}
+{% extends "base.html" %}
+{% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/output.css' %}">
-</head>
-<body >
+
     <p class="text-center text-lime-400 mt-6 font-extrabold text-4xl">Welcome to authentication System...</p>
-    <div class="p-9 flex justify-center">
+    <div class="py-20 px-7">
+        <div class="p-9 flex justify-center">
         
         <form method="POST" class="space-y-4 bg-rose-300 p-6 rounded shadow-md w-100">
             {% csrf_token %}
@@ -42,5 +36,6 @@
             <button class="bg-blue-700 text-white px-2 py-1 rounded-sm hover:bg-yellow-400" type="submit">SignUp</button>
         </form>
     </div>
-</body>
-</html>
+    </div>
+
+    {% endblock content %}
