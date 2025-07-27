@@ -63,6 +63,8 @@ class AssignedRoleForm(forms.Form):
         empty_label= 'Select a Role'
     )
 
+    #ki j kori
+
 
 class CreateGroupForm(forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
