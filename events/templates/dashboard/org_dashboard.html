@@ -6,7 +6,7 @@
         <p class="font-extrabold text-2xl mt-8 ml-2"></p>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-white">
       {% comment %} card 1  {% endcomment %}
-       <a href="{% url "total-events" %}?type=totalEvents">
+       <a href="{% url "all-events" %}?type=totalEvents">
   <div class="bg-blue-500 p-6 rounded-2xl text-lg font-bold hover:text-black-500">
     <p>Total Events</p>
     {% if events %}
@@ -89,17 +89,7 @@
             {% endfor %}
           {% endif %}
          </div>
-    <p class="text-2xl font-extrabold py-2 mb-3">Add/Update Event</p>
-    <form method="POST" action="{% url 'create_event' %}" class="max-w-xl space-y-4 border border-gray-100 p-4 rounded-md shadow-2xl">
-        {% csrf_token %}
-        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="name" placeholder="Event Name" type="text">
-        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="category" placeholder="Category" type="text">
-        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="location" placeholder="Location" type="text">
-        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="date" placeholder="dd/mm/yyyy" type="date">
-        <textarea class="w-full border border-yellow-500 rounded-md px-5 py-2" name="description" placeholder="Description"></textarea>
-        <textarea class="w-full border border-yellow-500 rounded-md px-5 py-2" name="category_description" placeholder="Category Description"></textarea>
-        <button type="submit" class="px-2 py-1 rounded-md bg-pink-600">Create</button>
-    </form>
+    
 </section>
 
 

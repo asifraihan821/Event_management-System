@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,PasswordChangeForm
 from django.contrib.auth.models import User,Group,Permission
 from django import forms
 import re
@@ -63,6 +63,8 @@ class AssignedRoleForm(forms.Form):
         empty_label= 'Select a Role'
     )
 
+    #ki j kori
+
 
 class CreateGroupForm(forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
@@ -75,3 +77,44 @@ class CreateGroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ['name', 'permissions']
+
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email','first_name','last_name']
+
+    bio = forms.CharField(required=False, widget=forms.Textarea)
+    profile_picture = forms.ImageField(required=False)
+    phone_number = forms.CharField(required=False,widget=forms.TextInput)
+
+    def __init__(self,*args,**kwargs):
+        self.userprofile = kwargs.pop('userprofile', None)
+        super().__init__(*args,**kwargs)
+        print( 'fomrs',self.userprofile)
+
+        if self.userprofile:
+            self.fields['bio'].initial = self.userprofile.bio
+            self.fields['profile_picture'].initial = self.userprofile.profile_picture
+            self.fields['phone_number'].initial = self.userprofile.phone_number
+
+    def save(self,commit=True):
+        user = super().save(commit=False)
+
+        if self.userprofile:
+            self.userprofile.bio = self.cleaned_data.get('bio')
+            self.userprofile.profile_picture = self.cleaned_data.get('profile_picture')
+            self.userprofile.phone_number = self.cleaned_data.get('phone_number')
+
+            if commit:
+                self.userprofile.save()
+        if commit:
+            user.save()
+        
+        return user
+    
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    pass

@@ -140,7 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
@@ -155,6 +155,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR /'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -171,4 +174,6 @@ EMAIL_HOST_PASSWORD = '12345'
 
 
 
-LOGIN_URL = 'log-in'
+LOGIN_URL = '/users/log-in'
+LOGIN_REDIRECT_URL = '/tasks/dashboard/'
+LOGOUT_REDIRECT_URL = '/'

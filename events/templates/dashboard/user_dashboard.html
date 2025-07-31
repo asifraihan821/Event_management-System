@@ -1,12 +1,12 @@
 {% extends "dashboard/main_dashboard.html" %} 
-{% block title %} User Dashboard{%endblock title %} 
+{% block title %} User Dashboard {% endblock title %} 
 {% block events %}
 
 <!-- user Dashboard -->
 <p class="font-extrabold text-2xl mt-8 ml-2"></p>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-white">
             {% comment %} card 1  {% endcomment %}
-             <a href="{% url "total-events" %}?type=totalEvents">
+             <a href="{% url "all-events" %}?type=totalEvents">
   <div class="bg-blue-500 p-6 rounded-2xl text-lg font-bold hover:text-black-500">
     <p>Total Events</p>
     {% if events %}
