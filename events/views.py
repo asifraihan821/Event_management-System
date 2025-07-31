@@ -6,6 +6,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required,user_passes_test,login_required
 from users.views import is_admin
 from django.core.mail import send_mail
+from django.views.generic import TemplateView
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView
+from django.views import View
+
+
 
 # Create your views here.
 def is_organizer(user):
@@ -19,54 +25,70 @@ def has_required_role(user):
 
 
 @login_required
-@user_passes_test(has_required_role,login_url='no-permission')
-def org_dashboard(request):
-    type = request.GET.get('type', 'all')
-    today = date.today()
-
-    # Count values
-    total_events_count = Event.objects.count()
-    total_participants_count = Participants.objects.count()
-    upcoming_events_count = Event.objects.filter(date__gt=today).count()
-    past_events_count = Event.objects.filter(date__lt=today).count()
-    all_events = Event.objects.prefetch_related('participants').annotate(partcpnts=Count('participants'))
-    todays_events = Event.objects.filter(date=today)
+def dashboard(request):
+    if is_admin(request.user):
+        return redirect('admin-dashboard')
+    elif is_organizer(request.user):
+        return redirect('org-dashboard')
+    elif is_participants(request.user):
+        return redirect('participant-dashboard')
+    else:
+        return redirect('user-dashboard')
 
 
-    if type == 'totalEvents':
-        all_events = Event.objects.all()
-    elif type == 'upcoming':
-        all_events = Event.objects.filter(date__gt=today)
-    elif type == 'past':
-        all_events = Event.objects.filter(date__lt=today)
-    elif type == 'participants':
-        # You could return participant list here if needed
-        pass
-    elif type == 'all':
-        all_events = Event.objects.prefetch_related('participants').annotate(partcpnts=Count('participants'))
+@method_decorator(user_passes_test(has_required_role, login_url='no-permission'), name='dispatch')
+class OrgDashboardView(TemplateView):
+    template_name = 'dashboard/org_dashboard.html'
 
-    return render(request, 'dashboard/org_dashboard.html', {
-        'events': total_events_count,
-        'todays_events': todays_events,
-        'upcoming_events': upcoming_events_count,
-        'past_events': past_events_count,
-        'total_participants': total_participants_count,
-        'all_events': all_events
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request = self.request
+        type = request.GET.get('type', 'all')
+        today = date.today()
+
+        # Count values
+        context['events'] = Event.objects.count()
+        context['todays_events'] = Event.objects.filter(date=today)
+        context['upcoming_events'] = Event.objects.filter(date__gt=today).count()
+        context['past_events'] = Event.objects.filter(date__lt=today).count()
+        context['total_participants'] = Participants.objects.count()
+
+        # Filtered event list
+        if type == 'totalEvents':
+            context['all_events'] = Event.objects.all()
+        elif type == 'upcoming':
+            context['all_events'] = Event.objects.filter(date__gt=today)
+        elif type == 'past':
+            context['all_events'] = Event.objects.filter(date__lt=today)
+        elif type == 'participants':
+            context['all_events'] = []  # Or provide participant data if needed
+        elif type == 'all':
+            context['all_events'] = Event.objects.prefetch_related('participants').annotate(partcpnts=Count('participants'))
+
+        return context
 
 
 
-@login_required
-def user_dashboard(request):
-    today = date.today()
-    events = Event.objects.select_related().count()
-    all_events = Event.objects.prefetch_related('participants').annotate(partcpnts = Count('participants'))
-    todays_events = Event.objects.filter(date = today)
-    upcoming_events = Event.objects.filter(date__gt = today).count()
-    past_events = Event.objects.filter(date__lt = today).count()
-    total_participants = Participants.objects.count()
+@method_decorator(login_required, name='dispatch')
+class UserDashboardView(TemplateView):
+    template_name = 'dashboard/user_dashboard.html'
 
-    return render(request, 'dashboard/user_dashboard.html',{'events':events, 'todays_events':todays_events, 'upcoming_events':upcoming_events, 'past_events':past_events, 'total_participants':total_participants,'all_events':all_events})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = date.today()
+
+        context['events'] = Event.objects.select_related().count()
+        context['all_events'] = Event.objects.prefetch_related('participants').annotate(
+            partcpnts=Count('participants')
+        )
+        context['todays_events'] = Event.objects.filter(date=today)
+        context['upcoming_events'] = Event.objects.filter(date__gt=today).count()
+        context['past_events'] = Event.objects.filter(date__lt=today).count()
+        context['total_participants'] = Participants.objects.count()
+
+        return context
+
+
 
 @login_required
 @user_passes_test(has_required_role,login_url='no-permission')
@@ -89,17 +111,23 @@ def past_events(request):
     events = Event.objects.prefetch_related('participants').annotate(partcpnts = Count('participants')).filter(date__lt = today)    
     return render(request, 'user_past_events.html', {'events':events})
 
-@login_required
-@user_passes_test(has_required_role,login_url='no-permission')
-def create_event(request):
 
-    if request.method == 'POST':
+
+
+@method_decorator(user_passes_test(is_admin,login_url='no-permission'), name = 'dispatch')
+class CreateEventView(View):
+
+    def get(self,request,*args,**kwargs):
+        return render(request, 'create_event.html')
+
+    def post(self,request,*args,**kwargs):
         name = request.POST.get('name')
         description = request.POST.get('description')
         date = request.POST.get('date')
         location = request.POST.get('location')
         category = request.POST.get('category')
         category_description = request.POST.get('category_description')
+        asset = request.FILES.get('asset')
 
         if name and description and date and location and category and category_description:
             category, created = Category.objects.get_or_create(name=category)
@@ -112,16 +140,15 @@ def create_event(request):
                 description=description,
                 date=date,
                 location=location,
-                category=category
+                category=category,
+                asset = asset
             )
             messages.success(request, "Event added successfully")
-            return redirect('org-dashboard')
-        
-    return redirect('org-dashboard')
+            return redirect('create-event')
 
-from django.shortcuts import render, get_object_or_404, redirect
-from events.models import Event, Category
-from django.contrib import messages
+        messages.error(request, "All fields are required.")
+        return render(request, 'create_event.html')
+
 
 @login_required
 @user_passes_test(has_required_role,login_url='no-permission')
@@ -198,6 +225,10 @@ def participant_dashboard(request):
     return render(request, 'dashboard/participant_dashboard.html', {'events': events})
 
 
-def event_detail(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    return render(request, 'events/event_detail.html', {'event': event})
+
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'event_detail.html'
+    pk_url_kwarg = 'event_id'
+    context_object_name = 'event'
+

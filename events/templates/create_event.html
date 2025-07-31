@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for message in messages %}
+    {% if message %}
+        <p class='bg-green-500 rounded-sm'>{{message}}</p>
+    {% endif %}
+{% endfor %}
+<p class="text-2xl font-extrabold py-2 mb-3">Add/Update Event</p>
+    <form method="POST" enctype='multipart/form-data' action="{% url 'create-event' %}" class="max-w-xl space-y-4 border border-gray-100 p-4 rounded-md shadow-2xl mb-10 ml-20">
+        {% csrf_token %}
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="name" placeholder="Event Name" type="text">
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="category" placeholder="Category" type="text">
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="location" placeholder="Location" type="text">
+        <input class="w-full border border-yellow-500 rounded-md px-5 py-2" name="date" placeholder="dd/mm/yyyy" type="date">
+        <textarea class="w-full border border-yellow-500 rounded-md px-5 py-2" name="description" placeholder="Description"></textarea>
+        <textarea class="w-full border border-yellow-500 rounded-md px-5 py-2" name="category_description" placeholder="Category Description"></textarea>
+        <input type="file" name='asset'>
+        <button type="submit" class="px-2 py-1 rounded-md bg-pink-600">Create</button>
+    </form>
+
+    {% endblock content %}

@@ -14,17 +14,17 @@
 
   <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
     <!-- Event Card 1 -->
-    
-      
-      {% for event in events %}
+    {% for event in events %}
+      <a href="{% url 'event-detail' event.id %}">  
       <div class="p-4 bg-white shadow-md rounded-md border border-purple-200">
       <p class="text-lg font-bold">{{event.name}}</p>
-      <p class="text-gray-600">Category: {{event.category}}</p>
+      {% comment %} <p class="text-gray-600">Category: {{event.category}}</p>
       <p class="text-gray-600">Participants: {{event.partcpnts}}</p>
       <p class="text-gray-600">Date: {{event.date}}</p>
-      <p class="text-gray-600">Location: {{event.location}}</p>
+      <p class="text-gray-600">Location: {{event.location}}</p> {% endcomment %}
       </div>
       {% endfor %}
+    </a>
   </div>
 </div>
 
